@@ -1,0 +1,57 @@
+{% extends "Base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+
+{% block title %}
+    <title>{{ object.name }} | Interact</title>
+{% endblock %}
+
+{% block content %}
+    <div class='container'>
+        <div class='row'>
+            <div class='col-lg-8'>
+                <h4 class='text-center' style='margin:1em;'>{{ object.name }}</h4>
+            </div>
+            <div class='col-lg-4' style='margin-top:1em;'>
+                {% if request.user.is_authenticated %}
+                    <div class='badge badge-success'>
+                        {{ request.user.username }}
+                    </div>
+                    <a href='{% url "Accounts:logout" %}' class='btn btn-danger'>Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        {% if quizset.quiz_set.all %}
+            {% for quiz in quizset.quiz_set.all %}
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="{{ quiz.cover_image_url }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ quiz.name }}{% if quiz.negative_marking %}<span class='badge badge-danger'>Negative Marking</span>{% endif %}</h5>
+                        <p class="card-text">{{ quiz.syllabus | truncatewords:20}}</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Full Marks : {{ quiz.full_marks }}
+                        </li>
+                        <li class="list-group-item">Published On : {{ quiz.pub_date }}</li>
+                        <li class="list-group-item">{{ quiz.question_set.count }} Question{{quiz.question_set.count|pluralize }} <span class='badge badge-info'>{{ quiz.allotted_time_in_minutes }} minutes</span></li>
+                    </ul>
+                    <div class="card-body">
+                        <div class="card-body">
+                        <a href="{% url 'Quiz:take-quiz' pk=quiz.pk %}" class="btn btn-success">Take This Quiz</a>
+                    </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning text-center">No Quizset Found</div>
+        {% endif %}
+    </div>
+
+{% endblock %}

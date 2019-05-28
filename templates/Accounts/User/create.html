@@ -1,0 +1,27 @@
+{% extends "Base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+
+{% block title %}
+    <title>User Registration | Interact</title>
+{% endblock %}
+
+{% block content %}
+    <div class='container'>
+        <h1 class='text-center'>Sign Up To Interact</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+            {{ form }}
+            <br/>
+            <button type="submit" class="btn btn-success btn-block">Signup</button>
+        </form>
+    </div>
+
+{% endblock %}
